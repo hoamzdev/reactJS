@@ -1,45 +1,34 @@
 
 import { createContext, useEffect, useState } from 'react';
 import '../styles/app.css';
-import Toolbar from '../components/Toolbar';
+import { RouterProvider } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom'
+import Home from '../nav/Home';
+import About from '../nav/About';
+import Blog from '../nav/Blog';
+import MainLayout from './MainLayout';
 
-export const ThemeContext = createContext();
-
-
-export default function App() {
-
-  const [count, setCount] = useState(0);
-  const [color, setColor] = useState('');
-
-  const [theme, setTheme] = useState('light');
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+const myRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />
+      },
+      {
+        path: "about",
+        element: <About />
+      },
+      {
+        path: "blog/:id",
+        element: <Blog />
+      },
+    ]
   }
-  useEffect(() => {
-    if (count % 2 == 0) {
-      setColor(
-        'blue'
-      )
-    }
-    else {
-      setColor(
-        'red'
-      )
-    }
-    return () => {
-      console.log('clean up');
-    }
-  }, [count]);
-
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <div className="app">
-        <p>{count}</p>
-
-        <div style={{ backgroundColor: color, width: '80px', height: '80px' }}></div>
-        <Toolbar />
-      </div>
-    </ThemeContext.Provider>
-  )
+]
+)
+export default function App() {
+  return <RouterProvider router={myRouter} />
 }
